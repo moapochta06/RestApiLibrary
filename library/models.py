@@ -8,17 +8,23 @@ class Author(models.Model):
         return self.name
 
 class Book(models.Model):
+    BOOK_TYPES = (
+        ('fiction', 'Художественное произведение'),
+        ('textbook', 'Учебник'),
+    )
+
     title = models.CharField(max_length=100)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     publication_year = models.IntegerField()
-    genre = models.CharField(max_length=100)
+    genre = models.CharField(max_length=100, blank=True, null=True)
     category = models.CharField(max_length=100)
     publisher = models.CharField(max_length=100)
-    cover_image = models.ImageField(upload_to='covers/')
-    file = models.FileField(upload_to='books/')
+    cover_image = models.ImageField(upload_to='covers/', blank=True, null=True)
+    file = models.FileField(upload_to='books/', blank=True, null=True)
+    book_type = models.CharField(max_length=10, choices=BOOK_TYPES)  # Новое поле для типа книги
 
     class Meta:
-        unique_together = ('title', 'author', 'publication_year', 'publisher')
+        unique_together = ('title', 'author', 'publication_year', 'publisher', 'book_type')  # Уникальность с учетом типа книги
 
     def __str__(self):
         return self.title
