@@ -1,6 +1,6 @@
 from rest_framework import generics,filters
-from .models import Author, Book
-from .serializers import AuthorSerializer, BookSerializer
+from .models import Author, Book, Publisher
+from .serializers import AuthorSerializer, BookSerializer, PublisherSerializer
 from .permissions import IsAdminOrReadOnly
 
 class AuthorList(generics.ListCreateAPIView):
@@ -14,6 +14,12 @@ class BookList(generics.ListCreateAPIView):
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'genre', 'author__name']   # Способы поиска
     permission_classes = [IsAdminOrReadOnly] 
+
+class PublisherList(generics.ListCreateAPIView):
+    queryset = Publisher.objects.all()
+    serializer_class = PublisherSerializer
+    permission_classes = [IsAdminOrReadOnly] 
+
 
 class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
